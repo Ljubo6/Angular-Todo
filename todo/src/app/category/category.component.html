@@ -1,1 +1,45 @@
-<p>category works!</p>
+<div class="row justify-content-center">
+  <div class="col-12 text-center mb-2">
+    <h1>TODO CATEGORIES</h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <form class="d-flex flex-wrap justify-content-between">
+      <div class="col-12 col-md-10 mb-3">
+        <input type="text" placeholder="Add New Categories here" name="categoryName"
+               class="form-control drop-shadow">
+      </div>
+      <div class="col-12 col-md-2 mb-3 ps-md-3">
+        <button type="submit" class="btn btn-primary btn-todo btn-block drop-shadow"> Add </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="row categories-list">
+  <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+    <div class="card drop-shadow">
+      <div class="card-body">
+        <div class="clearfix">
+          <div class="float-start float-sm-start">
+            <div class="badge badge-primary"> CATEGORY </div>
+          </div>
+          <div class="float-end float-sm-end cat-tools">
+            <small><i class="fa-solid fa-pencil text-success me-2"></i></small>
+            <small><i class="fa-solid fa-trash text-danger"></i></small>
+          </div>
+        </div>
+        <div class="todo-content">
+          <h3>Category</h3>
+          <small class="text-secondary">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia, voluptatem.
+          </small>
+        </div>
+        <span class="badge badge-danger">3 - Todos</span>
+      </div>
+    </div>
+  </div>
+</div>
+

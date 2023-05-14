@@ -1,0 +1,15 @@
+.todo-list{
+  margin-top: 50px;
+}
+.todo-list .card{
+  border: none;
+  margin-top: 5px;
+  background-color: #f8f8f8;
+
+}
+.todo-tools{
+  display: none;
+}
+.todo-tools i{
+  cursor: pointer;
+}
