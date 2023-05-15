@@ -13,3 +13,17 @@
 .todo-tools i{
   cursor: pointer;
 }
+.todo-list .card:hover{
+  cursor: pointer;
+  width: 600px;
+  height: 80px;
+  margin-left: -30px;
+  border-top-left-radius: 30px;
+  border-bottom-right-radius: 30px;
+}
+.todo-list .card:hover .todo-tools{
+  display: inline;
+}
+i{
+  margin-right: 20px;
+}

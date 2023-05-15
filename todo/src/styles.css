@@ -1,5 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
-
+body{
+  background-image: url('./assets/Bckground.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
 
 .drop-shadow{
   -webkit-box-shadow: 0px 0px 33px -10px rgba(71, 114, 254, 0.3);
