@@ -6,13 +6,18 @@
 
 <div class="row">
   <div class="col-md-12">
-    <form class="d-flex flex-wrap justify-content-between">
+    <form #f="ngForm" (ngSubmit)="f.form.valid && onSubmit(f)" class="d-flex flex-wrap justify-content-between">
       <div class="col-12 col-md-10 mb-3">
         <input type="text" placeholder="Add New Categories here" name="categoryName"
-               class="form-control drop-shadow">
+               class="form-control drop-shadow" ngModel required #category = 'ngModel'
+               [ngClass]="{'border-danger': f.submitted && category.invalid}"
+        >
       </div>
       <div class="col-12 col-md-2 mb-3 ps-md-3">
         <button type="submit" class="btn btn-primary btn-todo btn-block drop-shadow"> Add </button>
+      </div>
+      <div class="text-danger ms-3" *ngIf="f.submitted && category.invalid && category.errors">
+        Category is Required...
       </div>
     </form>
   </div>

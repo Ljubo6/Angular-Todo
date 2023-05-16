@@ -12,8 +12,8 @@ import { CategoryComponent } from './category/category.component';
 import { TodoComponent } from './todo/todo.component';
 import {FormsModule} from "@angular/forms";
 import {AngularFireModule} from "@angular/fire/compat";
-
-
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ToastrModule} from "ngx-toastr";
 
 @NgModule({
   declarations: [
@@ -28,8 +28,9 @@ import {AngularFireModule} from "@angular/fire/compat";
     AppRoutingModule,
     FormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFirestoreModule
-
+    AngularFirestoreModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
