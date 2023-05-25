@@ -26,13 +26,16 @@ input[type = text]{
   padding: 0;
   width: 100%;
 }
+.btn.btn-todo:hover{
+  border: 2px solid #4772fe;
+}
 .btn.btn-primary:hover{
   background-color: #e9eeff;
   color: #4772fe;
 }
-i{
-  cursor: pointer;
-}
 .border-danger{
   border: 1px solid red !important;
+}
+.errorRequired{
+  margin-top: 15px;
 }

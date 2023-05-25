@@ -4,6 +4,9 @@
   margin-top: 50px;
   border-top-left-radius: 30px;
 }
+.category:last-child{
+  margin-bottom: 50px;
+}
 .badge-primary{
   background-color: #e9eeff;
   color: #4772fe;
@@ -17,7 +20,8 @@
   display: none;
 
 }
-.cat-tools i {
+.cat-tools .cursor-pointer{
+  margin: 0 15px;
   cursor: pointer;
 }
 .categories-list .card:hover{
