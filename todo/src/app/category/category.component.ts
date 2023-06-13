@@ -19,15 +19,18 @@ export class CategoryComponent implements OnInit{
   categoryName:string = ''
   dataStatus:string = 'Add'
   catId:string = ''
+  userId = JSON.parse(localStorage.getItem('user')!).uid
   constructor(private categoryService:CategoryService) {
   }
+
+
 
 
   ngOnInit(): void {
     this.categoryService.loadCategories().subscribe(val => {
       this.categories = val
-      console.log(val)
     })
+    console.log(this.userId)
   }
   onSubmit(f:NgForm) {
     if(this.dataStatus === 'Add'){
@@ -35,11 +38,15 @@ export class CategoryComponent implements OnInit{
       let todoCategory = {
         category: f.value.categoryName,
         colorCode: this.color[randomNumber],
-        todoCount:0
+        todoCount:0,
+        authorId : this.userId
       }
       this.categoryService.saveCategory(todoCategory)
+      f.resetForm()
     }else if(this.dataStatus === 'Edit'){
       this.categoryService.updateCategory(this.catId,f.value.categoryName)
+      f.resetForm()
+      this.dataStatus = 'Add'
     }
 
   }

@@ -37,8 +37,6 @@ export class TodoComponent implements OnInit{
     this.catId = this.activatedRoute.snapshot.paramMap.get('id')
     this.todoService.loadTodos(this.catId!).subscribe(val => {
       this.todos = val
-      console.log(this.todos)
-      console.log(this.catId)
     })
   }
 
@@ -46,8 +44,6 @@ export class TodoComponent implements OnInit{
     this.todoId = id
     this.todoValue = todo
     this.dataStatus = 'Edit'
-    console.log(this.todoValue)
-    console.log(this.todoId)
   }
 
   onDelete(id: string) {

@@ -1,8 +1,27 @@
 <header class="drop-shadow">
   <div class="container">
-    <div class="row justify-content-md-center">
-      <div class="col-md-auto" routerLink="/">
+    <div class="row d-flex justify-content-md-between">
+      <div class="col-md-auto" routerLink="/category" *ngIf="isLoggedIn$ | async">
         <h5 class="text-primary brand text-center">Todo App</h5>
+      </div>
+
+      <div class="col-md-auto d-flex justify-content-center align-items-center" *ngIf="isLoggedIn$ | async">
+        <a class="me-3 text-decoration-none" >{{userEmail$ | async}} </a>
+        <button class="btn btn-sm btn-info bg-secondary-theme text-theme-primary" (click)="onLogOut()">Logout</button>
+      </div>
+    </div>
+<!--    <ng-template #admin>-->
+<!--      <div class="row d-flex justify-content-md-end">-->
+<!--        <div class="col-md-auto d-flex justify-content-center align-items-center">-->
+<!--          <a routerLinkActive="active" routerLink="/register" class="me-3 text-decoration-none">Register</a>-->
+<!--          <a routerLinkActive="active" routerLink="/login" class="me-3 text-decoration-none">Login</a>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </ng-template>-->
+    <div class="row d-flex justify-content-md-end"  *ngIf="!(isLoggedIn$ | async)">
+      <div class="col-md-auto d-flex justify-content-center align-items-center">
+        <a routerLinkActive="active" routerLink="/register" class="me-3 text-decoration-none">Register</a>
+        <a routerLinkActive="active" routerLink="/login" class="me-3 text-decoration-none">Login</a>
       </div>
     </div>
   </div>

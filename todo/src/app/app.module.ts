@@ -10,10 +10,14 @@ import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { CategoryComponent } from './category/category.component';
 import { TodoComponent } from './todo/todo.component';
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {AngularFireModule} from "@angular/fire/compat";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ToastrModule} from "ngx-toastr";
+import { LoginComponent } from './auth/login/login.component';
+import {AngularFireAuthModule} from "@angular/fire/compat/auth";
+import { RegisterComponent } from './auth/register/register.component';
+import { NavbarSecondComponent } from './layouts/navbar-second/navbar-second.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +25,10 @@ import {ToastrModule} from "ngx-toastr";
     NavbarComponent,
     FooterComponent,
     CategoryComponent,
-    TodoComponent
+    TodoComponent,
+    LoginComponent,
+    RegisterComponent,
+    NavbarSecondComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +36,9 @@ import {ToastrModule} from "ngx-toastr";
     FormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
+    AngularFireAuthModule,
     BrowserAnimationsModule,
+    ReactiveFormsModule,
     ToastrModule.forRoot()
   ],
   providers: [],
