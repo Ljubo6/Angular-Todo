@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {NgModule, Provider} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {environment} from "../environments/environment";
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
@@ -18,7 +18,18 @@ import { LoginComponent } from './auth/login/login.component';
 import {AngularFireAuthModule} from "@angular/fire/compat/auth";
 import { RegisterComponent } from './auth/register/register.component';
 import { NavbarSecondComponent } from './layouts/navbar-second/navbar-second.component';
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
+import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
+import { provideAuth,getAuth } from '@angular/fire/auth';
+import { provideFirestore,getFirestore } from '@angular/fire/firestore';
+import {AuthInterceptor} from "./shared/auth.interceptor";
+import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 
+const INTERCEPTOR_PROVIDER:Provider ={
+  provide:HTTP_INTERCEPTORS,
+  multi:true,
+  useClass:AuthInterceptor
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,20 +39,25 @@ import { NavbarSecondComponent } from './layouts/navbar-second/navbar-second.com
     TodoComponent,
     LoginComponent,
     RegisterComponent,
-    NavbarSecondComponent
+    NavbarSecondComponent,
+    NotFoundPageComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig),
+    HttpClientModule,
+    AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     AngularFireAuthModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideAuth(() => getAuth()),
+    provideFirestore(() => getFirestore())
   ],
-  providers: [],
+  providers: [INTERCEPTOR_PROVIDER],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

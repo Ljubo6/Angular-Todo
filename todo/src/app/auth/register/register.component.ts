@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {AuthSecondService} from "../../service/auth-second.service";
+import {AuthService} from "../../service/auth.service";
 
 @Component({
   selector: 'app-register',
@@ -7,9 +7,9 @@ import {AuthSecondService} from "../../service/auth-second.service";
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
-  constructor(private authSecondService:AuthSecondService) {
+  constructor(private authService:AuthService) {
   }
   async onSubmit(formValue:any) {
-    await this.authSecondService.signup(formValue.email,formValue.password)
+    await this.authService.signup(formValue.email,formValue.password)
   }
 }

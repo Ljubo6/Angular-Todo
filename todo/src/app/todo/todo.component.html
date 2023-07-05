@@ -24,10 +24,10 @@
   </div>
 </div>
 <div class="row todo-list justify-content-center">
-  <div class="col-12 col-md-6 ">
+  <div class="col-12  ">
     <div class="card" *ngFor="let todo of todos">
-      <div class="card-body">
-        <div class="clearfix">
+      <div class="card-body" [ngClass]="{'is-done': todo.data.isCompleted}">
+       <div class="clearfix">
           <div class="float-start text-secondary">
             <small *ngIf="!todo.data.isCompleted">
               <i class="fa-regular fa-circle text-danger icon-margin"></i>
@@ -35,31 +35,25 @@
             <small *ngIf="todo.data.isCompleted">
               <i class="fa-solid fa-check text-success icon-margin"></i>
             </small>
-
-            {{todo.data.todo}}
-
-
-            <div class="line" *ngIf="todo.data.isCompleted"></div>
           </div>
           <div class="float-end">
             <small class="icon-margin" (click)="completeTodo(todo.id)" *ngIf="!todo.data.isCompleted">
               <i class="fa-regular fa-circle-check text-success"></i>
             </small>
-           <small (click)="uncompletedTodo(todo.id)" *ngIf="todo.data.isCompleted">
+           <small class="icon-margin" (click)="uncompletedTodo(todo.id)" *ngIf="todo.data.isCompleted">
              <i class="fa-solid fa-circle-xmark text-danger"></i>
            </small>
-
-            <div class="todo-tools">
-              <small (click)="onEdit(todo.data.todo,todo.id)" class="icon-margin">
-                <i class="fa-solid fa-pencil text-warning"></i>
-              </small>
-              <small (click)="onDelete(todo.id)" class="icon-margin">
-                <i class="fa-solid fa-trash text text-danger"></i>
-              </small>
-
-            </div>
+            <small (click)="onEdit(todo.data.todo,todo.id)" class="icon-margin">
+              <i class="fa-solid fa-pencil text-warning"></i>
+            </small>
+            <small (click)="onDelete(todo.id)" class="icon-margin">
+              <i class="fa-solid fa-trash text text-danger"></i>
+            </small>
           </div>
         </div>
+          <div class="text-center">
+            {{todo.data.todo}}
+          </div>
       </div>
     </div>
   </div>

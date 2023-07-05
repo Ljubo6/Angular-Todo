@@ -3,30 +3,30 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTre
 import {Observable, of} from 'rxjs';
 
 import {ToastrService} from "ngx-toastr";
-import {AuthSecondService} from "./auth-second.service";
-
-
+import {AuthService} from "./auth.service";
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
   isSignedIn:boolean = false
-  constructor(private authSecondService:AuthSecondService,
+  userId!:string
+  constructor(private authService:AuthService,
               private router:Router,
-              private firebaseService: AuthSecondService,
               private toastr: ToastrService) {
-    this.firebaseService.isLoggedIn$.subscribe((isLoggedIn:boolean) => {
+    this.authService.isLoggedIn$.subscribe((isLoggedIn:boolean) => {
       this.isSignedIn = isLoggedIn
+      if (isLoggedIn){
+        this.userId = JSON.parse(localStorage.getItem('user')!).uid
+      }
     })
   }
-
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    if (this.isSignedIn){
-      console.log('Access Granted')
+    if (this.authService.isAuthenticated()){
       return of(true)
     }else{
+      this.authService.logout()
       this.toastr.warning("You dont have permission to access this page...")
       this.router.navigate(['/login'],{
         queryParams:{
@@ -36,5 +36,4 @@ export class AuthGuard implements CanActivate {
       return of(false)
     }
   }
-
 }

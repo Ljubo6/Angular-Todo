@@ -4,16 +4,22 @@ import {ToastrService} from "ngx-toastr";
 import {map} from "rxjs";
 import firebase from "firebase/compat/app";
 import firestore = firebase.firestore;
-
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoService {
-
-  constructor(private afs:AngularFirestore,private toastr:ToastrService) { }
-
-
+  userId!:string
+  constructor(private afs:AngularFirestore,
+              private firebaseService: AuthService,
+              private toastr:ToastrService) {
+    this.firebaseService.isLoggedIn$.subscribe((isLoggedIn:boolean) => {
+      if (isLoggedIn){
+        this.userId = JSON.parse(localStorage.getItem('user')!).uid
+      }
+    })
+  }
   saveTodo(id:string,data:any){
     this.afs.collection('categories').doc(id).collection('todos').add(data).then(ref => {
       this.afs.doc(`categories/${id}`).update({
@@ -23,7 +29,7 @@ export class TodoService {
     })
   }
   loadTodos(id:string){
-    return  this.afs.collection('categories').doc(id).collection('todos').snapshotChanges().pipe(
+    return  this.afs.collection('categories').doc(id).collection('todos',ref => ref.where('authorId','==',this.userId)).snapshotChanges().pipe(
       map(actions => {
         return actions.map(a => {
           const data = a.payload.doc.data()

@@ -1,91 +1,111 @@
 import { Injectable } from '@angular/core';
-import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {
+  Auth,
+  createUserWithEmailAndPassword,
+  signOut,
+  signInWithEmailAndPassword
+} from '@angular/fire/auth'
 import {ToastrService} from "ngx-toastr";
 import {Router} from "@angular/router";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Observable, Subject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false)
 
-  isLoggedInGuard:boolean = false
+  expiresIn: string = ''
 
-  userEmail:BehaviorSubject<string> = new BehaviorSubject<string>('')
-
-  constructor(private afAuth:AngularFireAuth,
-              private toastr:ToastrService,
+  public isLoggedInSubject: BehaviorSubject<boolean>;
+  public isLoggedIn$: Observable<boolean>;
+  isLoggedInGuard: boolean = false
+  constructor(
+              private auth: Auth,
+              private toastr: ToastrService,
               private router: Router
   ) {
-    this.checkLoginStatus();
-    this.loadUser()
+    this.isLoggedInSubject = new BehaviorSubject<boolean>(false);
+    this.isLoggedIn$ = this.isLoggedInSubject.asObservable();
+
+    this.checkAuthenticationStatus();
+
   }
 
-  checkLoginStatus() {
-    const loggedInStatus = localStorage.getItem('loggedIn');
-    if (loggedInStatus === 'true') {
-      this.loggedIn.next(true);
+  private checkAuthenticationStatus() {
+    const user = JSON.parse(localStorage.getItem('user')!);
+    const isLoggedIn = user !== null;
+    this.isLoggedInSubject.next(isLoggedIn);
+  }
+  get token(): string {
+    const expDate = new Date(localStorage.getItem('fb-token-exp')!)
+    if (new Date > expDate) {
+      this.logout()
+      return null!
+    }
+    return localStorage.getItem('token')!
+
+  }
+  public setToken(response: any) {
+    if (response) {
+      const expDate = new Date(new Date().getTime() + Number(this.expiresIn) * 1000)
+      localStorage.setItem('user', JSON.stringify(response.user))
+      //localStorage.setItem('token', response.user['stsTokenManager'].accessToken)
+      //localStorage.setItem('token', response["_tokenResponse"].idToken)
+      localStorage.setItem('token', response.user.accessToken)
+      localStorage.setItem('fb-token-exp', expDate.toString())
+    } else {
+      localStorage.clear()
     }
   }
-
-  login(email:string,password:string){
-    this.afAuth.signInWithEmailAndPassword(email,password).then(logRef => {
-      this.toastr.success('Logged In Successfully')
-
-      this.loggedIn.next(true)
-      // this.loadUser()
-      sessionStorage.setItem('loggedIn', 'true')
-      this.isLoggedInGuard = true
-      this.router.navigate(['/category'])
-    }).catch(e => {
-      this.toastr.warning(e)
-    })
+  isAuthenticated(): boolean {
+    return !!this.token
   }
-  loadUser(){
-    this.afAuth.authState.subscribe(user => {
+  async signin(user: any) {
+    await signInWithEmailAndPassword(this.auth, user.email, user.password)
+      .then((response: any) => {
+        this.expiresIn = response["_tokenResponse"].expiresIn
+        console.log(response)
+        this.setToken(response)
+        this.isLoggedInSubject.next(true);
+        this.toastr.success('Login success')
+        this.router.navigate(['/category'])
+      })
+      .catch((error) => {
+        const errorCode = error.code
+        if (errorCode === 'auth/wrong-password') {
+          this.toastr.error('Wrong password')
+        } else if (errorCode === 'auth/user-not-found') {
+          this.toastr.error('User with this email do not exist')
+        }
+      })
 
-      //localStorage.setItem('user',JSON.stringify(user))
-      //localStorage.setItem('user',JSON.stringify(user))
-      //sessionStorage.setItem('loggedIn', 'true')
-
-      //this.userEmail.next(JSON.parse(localStorage.getItem('user')!)?.email)
-
-
-
-
-     //sessionStorage.setItem('loggedInEmail',this.userEmail.value)
-
-      if (user) {
-        localStorage.setItem('user', JSON.stringify(user));
-        const userEmail = user.email || '';
-        this.userEmail.next(userEmail);
-      } else {
-        localStorage.removeItem('user');
-        this.userEmail.next('');
-      }
-    })
   }
-  logOut(){
-    this.afAuth.signOut().then(() =>{
-      this.toastr.success('User Logged Out Successfully')
-
-      this.loggedIn.next(false)
+  async signup(email: string, password: string) {
+    await createUserWithEmailAndPassword(this.auth, email, password)
+      .then((response) => {
+        this.toastr.success('Register success')
+        this.router.navigate(['/login']);
+      })
+      .catch((error) => {
+        const errorCode = error.code
+        if (errorCode === 'auth/email-already-in-use') {
+          this.toastr.error('User with this email already exist')
+        }
+      })
+  }
+  logout() {
+    signOut(this.auth).then(() => {
+      this.isLoggedInSubject.next(false);
       this.isLoggedInGuard = false
-      localStorage.removeItem('user')
-      sessionStorage.clear()
-
-      this.router.navigate(['/login'])
-    })
-  }
-  isLoggedIn(){
-    const savedLoggedIn = sessionStorage.getItem('loggedIn');
-    this.loggedIn.next(savedLoggedIn === 'true');
-    return this.loggedIn.asObservable()
-  }
-  loggedInEmail(){
-    // const savedUserEmail = sessionStorage.getItem('loggedInEmail')
-    // this.userEmail.next(savedUserEmail!);
-    return this.userEmail.asObservable()
+      localStorage.removeItem('user');
+      localStorage.removeItem('fb-token-exp');
+      localStorage.removeItem('token');
+      localStorage.removeItem('originalId');
+      this.router.navigate(['/login']);
+    }).catch(e => {
+      this.toastr.warning(e);
+    });
   }
 }
+
+

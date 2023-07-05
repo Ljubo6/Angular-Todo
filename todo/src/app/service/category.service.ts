@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {AngularFirestore} from "@angular/fire/compat/firestore";
 import {ToastrService} from "ngx-toastr";
 import {map} from "rxjs";
-import {AuthSecondService} from "./auth-second.service";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ export class CategoryService {
   userId!:string
   constructor(
     private afs:AngularFirestore,
-    private firebaseService: AuthSecondService,
+    private firebaseService: AuthService,
     private toastr:ToastrService) {
     this.firebaseService.isLoggedIn$.subscribe((isLoggedIn:boolean) => {
       if (isLoggedIn){
@@ -19,6 +19,7 @@ export class CategoryService {
       }
     })
   }
+
   saveCategory(data:any){
     this.afs.collection('categories').add(data).then(ref => {
       this.toastr.success('New Category Saved Successfully')

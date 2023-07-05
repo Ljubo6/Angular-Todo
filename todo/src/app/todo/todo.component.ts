@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {NgForm} from "@angular/forms";
 import {TodoService} from "../service/todo.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-todo',
@@ -11,16 +11,19 @@ import {ActivatedRoute} from "@angular/router";
 export class TodoComponent implements OnInit{
   todoValue:string = ''
   catId: string | null = ''
+  categoryId!:string | null
   todoId:string = ''
   todos!: Array<any>
   dataStatus:string = 'Add'
-  constructor(private todoService:TodoService,private activatedRoute:ActivatedRoute) {
+  userId = JSON.parse(localStorage.getItem('user')!).uid
+  constructor(private todoService:TodoService,private activatedRoute:ActivatedRoute,
+              private router:Router) {
   }
   onSubmit(f: NgForm) {
-
     if(this.dataStatus == 'Add'){
       let todo = {
         todo:f.value.todoText,
+        authorId : this.userId,
         isCompleted:false
       }
       this.todoService.saveTodo(this.catId!,todo)
@@ -30,14 +33,18 @@ export class TodoComponent implements OnInit{
       f.resetForm()
       this.dataStatus = 'Add'
     }
-
   }
-
   ngOnInit(): void {
     this.catId = this.activatedRoute.snapshot.paramMap.get('id')
-    this.todoService.loadTodos(this.catId!).subscribe(val => {
-      this.todos = val
-    })
+    this.categoryId = localStorage.getItem('originalId')
+    if(this.catId === this.categoryId){
+      this.todoService.loadTodos(this.catId!).subscribe(val => {
+        this.todos = val
+      })
+    }else{
+      this.router.navigate(['/error'])
+    }
+
   }
 
   onEdit(todo:string, id:string) {

@@ -26,7 +26,7 @@
 </div>
 
 <div class="row categories-list">
-  <div class="col-12 col-sm-6 col-md-4 col-lg-3 category" *ngFor="let category of categories">
+  <div class="col-12  category" *ngFor="let category of categories">
     <div class="card drop-shadow" [style.border-left-color]="category.data.colorCode">
       <div class="card-body">
         <div class="clearfix">
@@ -38,11 +38,8 @@
             <small (click)="onDelete(category.id)"><i class="fa-solid fa-trash text-danger"></i></small>
           </div>
         </div>
-        <div class="todo-content" [routerLink]="['/todo',category.id]">
+        <div class="todo-content" [routerLink]="['/todo',category.id]" (click)="saveCategoryId(category.id)">
           <h3 class="text-center" [style.color]="category.data.colorCode">{{category.data.category}}</h3>
-<!--          <small class="text-secondary">-->
-<!--            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia, voluptatem.-->
-<!--          </small>-->
         </div>
         <span class="badge badge-danger">{{category.data.todoCount}} - Todos</span>
       </div>

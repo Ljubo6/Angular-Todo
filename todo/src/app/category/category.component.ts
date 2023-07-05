@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NgForm} from "@angular/forms";
 import {CategoryService} from "../service/category.service";
+import {TodoService} from "../service/todo.service";
 
 @Component({
   selector: 'app-category',
@@ -20,17 +21,13 @@ export class CategoryComponent implements OnInit{
   dataStatus:string = 'Add'
   catId:string = ''
   userId = JSON.parse(localStorage.getItem('user')!).uid
-  constructor(private categoryService:CategoryService) {
+  constructor(private categoryService:CategoryService,
+              private todoService:TodoService) {
   }
-
-
-
-
   ngOnInit(): void {
     this.categoryService.loadCategories().subscribe(val => {
       this.categories = val
     })
-    console.log(this.userId)
   }
   onSubmit(f:NgForm) {
     if(this.dataStatus === 'Add'){
@@ -50,7 +47,6 @@ export class CategoryComponent implements OnInit{
     }
 
   }
-
   onEdit(category:string,id:string) {
     this.catId = id
     this.categoryName = category
@@ -59,5 +55,9 @@ export class CategoryComponent implements OnInit{
 
   onDelete(id:string) {
     this.categoryService.deleteCategory(id)
+  }
+
+  saveCategoryId(id:string) {
+    localStorage.setItem('originalId',id)
   }
 }
